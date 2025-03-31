@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .calculator {
+            background-color: #f3f4f6;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 320px;
+            overflow: hidden;
+        }
+
+        .display {
+            background-color: #1f2937;
+            padding: 1rem;
+            text-align: right;
+        }
+
+        .equation {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            height: 1.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .result {
+            color: white;
+            font-size: 1.875rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.25rem;
+            padding: 0.25rem;
+            background-color: #e5e7eb;
+        }
+
+        button {
+            padding: 1rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .number {
+            background-color: white;
+        }
+
+        .number:hover {
+            background-color: #f3f4f6;
+        }
+
+        .operator {
+            background-color: #d1d5db;
+        }
+
+        .operator:hover {
+            background-color: #9ca3af;
+        }
+
+        .clear {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .clear:hover {
+            background-color: #dc2626;
+        }
+
+        .equals {
+            background-color: #3b82f6;
+            color: white;
+            grid-row: span 2;
+        }
+
+        .equals:hover {
+            background-color: #2563eb;
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <div class="equation" id="equation"></div>
+            <div class="result" id="display">0</div>
+        </div>
+        <div class="buttons">
+            <button class="clear" onclick="handleClear()">C</button>
+            <button class="operator" onclick="handleDelete()">⌫</button>
+            <button class="operator" onclick="handleOperator('/')">÷</button>
+            <button class="operator" onclick="handleOperator('*')">×</button>
+
+            <button class="number" onclick="handleNumber('7')">7</button>
+            <button class="number" onclick="handleNumber('8')">8</button>
+            <button class="number" onclick="handleNumber('9')">9</button>
+            <button class="operator" onclick="handleOperator('-')">−</button>
+
+            <button class="number" onclick="handleNumber('4')">4</button>
+            <button class="number" onclick="handleNumber('5')">5</button>
+            <button class="number" onclick="handleNumber('6')">6</button>
+            <button class="operator" onclick="handleOperator('+')">+</button>
+
+            <button class="number" onclick="handleNumber('1')">1</button>
+            <button class="number" onclick="handleNumber('2')">2</button>
+            <button class="number" onclick="handleNumber('3')">3</button>
+            <button class="equals" onclick="handleEqual()">=</button>
+
+            <button class="number zero" onclick="handleNumber('0')">0</button>
+            <button class="number" onclick="handleNumber('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        let display = '0';
+        let equation = '';
+        let shouldResetDisplay = false;
+
+        const displayElement = document.getElementById('display');
+        const equationElement = document.getElementById('equation');
+
+        function updateDisplay() {
+            displayElement.textContent = display;
+            equationElement.textContent = equation;
+        }
+
+        function handleNumber(number) {
+            if (shouldResetDisplay) {
+                display = number;
+                shouldResetDisplay = false;
+            } else {
+                display = display === '0' ? number : display + number;
+            }
+            updateDisplay();
+        }
+
+        function handleOperator(operator) {
+            shouldResetDisplay = true;
+            equation = display + ' ' + operator + ' ';
+            updateDisplay();
+        }
+
+        function handleEqual() {
+            try {
+                const result = eval(equation + display);
+                display = String(result);
+                equation = '';
+            } catch (error) {
+                display = 'Error';
+            }
+            shouldResetDisplay = true;
+            updateDisplay();
+        }
+
+        function handleClear() {
+            display = '0';
+            equation = '';
+            shouldResetDisplay = false;
+            updateDisplay();
+        }
+
+        function handleDelete() {
+            display = display.length === 1 ? '0' : display.slice(0, -1);
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
